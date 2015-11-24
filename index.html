@@ -51,10 +51,21 @@ form .btn-primary {
   <input type="number" name="theCaseYear" value="2013">
 </form>
 
-<button onclick="OnSubmitForm()">Search</button>
 
-<p id="errorMessage">		</p>
+<style type="text/css">
+div.inline { float:left; }
+.clearBoth { clear:both; }
+</style>
 
+<style>
+.after-box {
+    clear: left;
+    border: 3px solid white;      
+}
+</style>
+
+<button onclick="OnSubmitForm()" class="inline">Search</button>
+<span style="color:red" id="errorMessage"></span>
 
 </head>
 
@@ -66,8 +77,6 @@ form .btn-primary {
         <hr/>
       </div>
     </div>
-	
-
 
 <div id="chart_placeholder"></div>
 <script src="js/readResponse.js"></script>

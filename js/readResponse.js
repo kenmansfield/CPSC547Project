@@ -1,8 +1,5 @@
-
 var url = "http://app.knomos.ca/api/cases/bcca/2013/173/citations";
 var index = 0;
-
-
 
 // The data we parse from the JSON responses.
 // ie. the list of citations per each case
@@ -39,13 +36,22 @@ function dataSubmitted()
 	var caseNumber = form.theCaseNum.value;
 	var caseYear =  form.theCaseYear.value;
 	
-	
 	url = "http://app.knomos.ca/api/cases/bcca/" + caseYear + 
 	"/" + caseNumber + "/citations";
 		
 	caseIndices.push("" + caseYear + caseNumber);
 	
 	newRequest();
+}
+
+function statusFinishedLoading()
+{
+	document.getElementById("errorMessage").innerHTML = "Loaded";
+}
+
+function statusLoading(loadedIndex)
+{
+	document.getElementById("errorMessage").innerHTML = "Loading: " + loadedIndex;	
 }
 
 function newRequest()
@@ -58,8 +64,8 @@ function newRequest()
 
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			statusLoading(index);
 			referenceLoad(xmlhttp.responseText);
-			document.getElementById("errorMessage").innerHTML = "";
 		}
 		else
 		{
@@ -165,6 +171,13 @@ function createUniqueNameList()
 
 function buildMatrix()
 {
+	
+	//Todo: How to differentiate between cites and citedby
+	//make it twice as wide for cited?
+	
+	//Todo: add 3rd degree alters? or just add the inter-references for 2nd degree alters?
+	//(either way it would need to make a 2nd round of queries, so loading would take longer)
+	
 	var retArray = [];
 	for(i = 0; i < namesArray.length; i++)
 	{
@@ -179,7 +192,7 @@ function buildMatrix()
 	{
 		for(j = 0; j < namesArray.length; j++)
 		{	
-			retArray[i][j] = 0;
+			//retArray[i][j] = 0;
 			var x = caseIndices.indexOf(namesArray[i]);
 			
 			if( x >= 0 )
@@ -190,6 +203,12 @@ function buildMatrix()
 					if(tempString == namesArray[j])
 					{
 						retArray[i][j] = 2;
+						
+						//receiving side
+						if(retArray[j][i] == 0)
+						{
+							retArray[j][i] = 1;
+						}
 					}
 				}
 			}
@@ -215,5 +234,5 @@ function doD3()
 	d3.select("svg").remove();	
 	d3.select('#chart_placeholder').datum(data).call(chart);
 	d3.select('#chart_placeholder').transition();
-	
+	statusFinishedLoading();
 }
