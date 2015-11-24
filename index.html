@@ -3,7 +3,7 @@
   <!-- Use the Source, Luke -->
   
   <head>
-    <title>DependencyWheel: An Interactive Visualization Of Package Dependencies</title>
+    <title>CPSC 547 Project: Ken Mansfield: Law case citations</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <link href='http://fonts.googleapis.com/css?family=Rosario:400,700' rel='stylesheet' type='text/css'>
@@ -35,15 +35,26 @@ form .btn-primary {
 }
 </style>
 
+<form id="authForm">
+   Username:<br>
+  <input type="text" name="username" value="username">
+  <br>
+   Password:<br>
+  <input type="text" name="password" value="password"><br>
+</form> 
+
 <form id="inputForm">
-   Case Number:<br>
+   <br>Case Number:<br>
   <input type="number" name="theCaseNum" value="173">
   <br>
    Case Year:<br>
   <input type="number" name="theCaseYear" value="2013">
-</form> 
+</form>
 
 <button onclick="OnSubmitForm()">Search</button>
+
+<p id="errorMessage">		</p>
+
 
 </head>
 
@@ -51,10 +62,12 @@ form .btn-primary {
 
     <div class="row">
       <div class="large-12 columns">
-        <h1>Law Case Citations <small>(subtitles here)</small></h1>
+        <h1>Law Case Citations <small><br>CPSC 547: Ken Mansfield.<br>(Data from Knomos)</small></h1>
         <hr/>
       </div>
     </div>
+	
+
 
 <div id="chart_placeholder"></div>
 <script src="js/readResponse.js"></script>

@@ -20,8 +20,17 @@ var referenceMatrix = [];
 
 var chart;
 
+var theUsername;
+var thePassword;
+
 function dataSubmitted()
 {
+	caseArray = [];
+	caseIndices = [];
+	namesArray = [];
+	referenceMatrix = [];
+	index = 0;
+	
 	// Start with our very first. 
 	// Replace this in the future with whatever our input is.
 	d3.select('#chart_placeholder svg').remove();
@@ -29,6 +38,7 @@ function dataSubmitted()
 	
 	var caseNumber = form.theCaseNum.value;
 	var caseYear =  form.theCaseYear.value;
+	
 	
 	url = "http://app.knomos.ca/api/cases/bcca/" + caseYear + 
 	"/" + caseNumber + "/citations";
@@ -41,12 +51,25 @@ function dataSubmitted()
 function newRequest()
 {
 	var xmlhttp = new XMLHttpRequest();
+	
+	var form = document.getElementById('authForm');
+	theUsername = form.username.value;
+	thePassword =  form.password.value;
+
 	xmlhttp.onreadystatechange=function() {
 		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 			referenceLoad(xmlhttp.responseText);
+			document.getElementById("errorMessage").innerHTML = "";
+		}
+		else
+		{
+			//handle error.
+			document.getElementById("errorMessage").innerHTML = xmlhttp.responseText;
 		}
 	}
 	xmlhttp.open("GET", url, true);
+
+	xmlhttp.setRequestHeader ("Authorization", "Basic " + btoa(theUsername + ":" + thePassword));	
 	xmlhttp.send();
 }
 
@@ -184,8 +207,6 @@ function doD3()
 	.margin(120)   // used to display package names 
 	.padding(.02) // separating groups in the wheel 
 
-	
-	
 	d3.select("body").transition();
 	d3.select('#chart_placeholder svg').remove(); 
 	d3.select("svg").remove();	
