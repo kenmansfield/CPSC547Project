@@ -43,6 +43,10 @@ d3.chart.dependencyWheel = function(options) {
       var matrix = data.matrix;
       var packageNames = data.packageNames;
       var radius = width / 2 - margin;
+	  
+    var colors = d3.scale.ordinal()
+      .range(['#9C6744','#C9BEB9','#CFA07E','#C4BAA1','#C2B6BF','#121212','#8FB5AA','#85889E','#9C7989','#91919C','#242B27','#212429','#99677B','#36352B','#33332F','#2B2B2E','#2E1F13','#2B242A','#918A59','#6E676C','#6E4752','#6B4A2F','#998476','#8A968D','#968D8A','#968D96','#CC855C', '#967860','#929488','#949278','#A0A3BD','#BD93A1','#65666B','#6B5745','#6B6664','#695C52','#56695E','#69545C','#565A69','#696043','#63635C','#636150','#333131','#332820','#302D30','#302D1F','#2D302F','#CFB6A3','#362F2A']);
+
 
       // create the layout
       var chord = d3.layout.chord()
@@ -116,8 +120,9 @@ d3.chart.dependencyWheel = function(options) {
         });
 
       g.append("svg:path")
-        .style("fill", fill)
-        .style("stroke", fill)
+		.style("fill", function (d) { return colors(d.index); })
+        //.style("fill", fill)
+        //.style("stroke", fill)
         .attr("d", arc)
         .style("cursor", "pointer")
         .on("mouseover", fade(0.1))
@@ -141,8 +146,8 @@ d3.chart.dependencyWheel = function(options) {
           .data(chord.chords)
         .enter().append("svg:path")
           .attr("class", "chord")
-          .style("stroke", function(d) { return d3.rgb(fill(d.source)).darker(); })
-          .style("fill", function(d) { return fill(d.source); })
+          .style("stroke", function(d) { return d3.rgb(colors(d.source.index)).darker(); })
+          .style("fill", function(d) { return  colors(d.source.index); })
           .attr("d", d3.svg.chord().radius(radius))
           .attr("transform", function(d) {
             return "rotate(" + rotation + ")";

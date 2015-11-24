@@ -2,18 +2,53 @@
 var url = "http://app.knomos.ca/api/cases/bcca/2013/173/citations";
 var index = 0;
 
-newRequest();
 
-var caseIndices = [];
 
-//start with our very first. 
-//replace this in the future with whatever our input is.
-caseIndices.push("2013173");
-
-var namesArray = [];
+// The data we parse from the JSON responses.
+// ie. the list of citations per each case
 var caseArray = [];
 
+// The cases, ie. the case in caseIndice[x] has its citations in 
+// caseArray[x]
+var caseIndices = [];
+
+// This will store the names that will be displayed on the viz.
+var namesArray = [];
+
+// This is the actual dependency matrix pushed to d3.
 var referenceMatrix = [];
+
+var chart;
+
+function dataSubmitted()
+{
+	// Start with our very first. 
+	// Replace this in the future with whatever our input is.
+	d3.select('#chart_placeholder svg').remove();
+	var form = document.getElementById('inputForm');
+	
+	var caseNumber = form.theCaseNum.value;
+	var caseYear =  form.theCaseYear.value;
+	
+	url = "http://app.knomos.ca/api/cases/bcca/" + caseYear + 
+	"/" + caseNumber + "/citations";
+		
+	caseIndices.push("" + caseYear + caseNumber);
+	
+	newRequest();
+}
+
+function newRequest()
+{
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function() {
+		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+			referenceLoad(xmlhttp.responseText);
+		}
+	}
+	xmlhttp.open("GET", url, true);
+	xmlhttp.send();
+}
 
 function referenceLoad(response)
 {
@@ -49,19 +84,6 @@ function referenceLoad(response)
 	newRequest();
 
 	//increment so.
-	
-}
-
-function newRequest()
-{
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange=function() {
-		if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-			referenceLoad(xmlhttp.responseText);
-		}
-	}
-	xmlhttp.open("GET", url, true);
-	xmlhttp.send();
 }
 
 //This function stores all of the citations for that case into the
@@ -98,8 +120,6 @@ function parseFunction(response)
 	return newCaseArray;
 }
 
-
-
 function createUniqueNameList()
 {
 	var thelength = caseArray.length;
@@ -115,7 +135,6 @@ function createUniqueNameList()
 			}
 		}
 	}
-
 }
 
 function buildMatrix()
@@ -129,7 +148,6 @@ function buildMatrix()
 			retArray[i][j] = 0;
 		}
 	}
-	
 		
 	for(i = 0; i < namesArray.length; i++)
 	{
@@ -156,15 +174,22 @@ function buildMatrix()
 
 function doD3()
 {
+	d3.select("svg").remove();
 	var data = {
 		packageNames: namesArray,
 		matrix: referenceMatrix
 	  };
 	 
-	var chart = d3.chart.dependencyWheel().width(800)    // also used for height, since the wheel is in a a square 
+	chart = d3.chart.dependencyWheel().width(800)    // also used for height, since the wheel is in a a square 
 	.margin(120)   // used to display package names 
-	.padding(.02); // separating groups in the wheel 
+	.padding(.02) // separating groups in the wheel 
+
 	
-	d3.select('#chart_placeholder svg').remove();  
+	
+	d3.select("body").transition();
+	d3.select('#chart_placeholder svg').remove(); 
+	d3.select("svg").remove();	
 	d3.select('#chart_placeholder').datum(data).call(chart);
+	d3.select('#chart_placeholder').transition();
+	
 }

@@ -34,9 +34,27 @@ form .btn-primary {
   margin-top: 25px;
 }
 </style>
+
+<form id="inputForm">
+   Case Number:<br>
+  <input type="number" name="theCaseNum" value="173">
+  <br>
+   Case Year:<br>
+  <input type="number" name="theCaseYear" value="2013">
+</form> 
+
+<button onclick="OnSubmitForm()">Search</button>
+
 </head>
 
 <body>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>Law Case Citations <small>(subtitles here)</small></h1>
+        <hr/>
+      </div>
+    </div>
 
 <div id="chart_placeholder"></div>
 <script src="js/readResponse.js"></script>
@@ -44,25 +62,11 @@ form .btn-primary {
 <script src="js/d3.dependencyWheel.js"></script>
 <script>
 
-// From http://mkweb.bcgsc.ca/circos/guide/tables/
 
-/*var data = {
-	packageNames: ["blah", "blah2", "blah3", "blah4"],
-	matrix: [[5,  5, 5, 5],
-			[ 10, 5, 0, 0],
-			[ 10, 0, 5, 0],
-			[ 10,   0,  0, 5],
-			]
-  };*/
-
-
-
-
-
-
-
-
-
+function OnSubmitForm()
+{
+	dataSubmitted();
+}
 
 </script>
 </body>
