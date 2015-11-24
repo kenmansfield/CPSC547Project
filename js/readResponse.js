@@ -64,7 +64,10 @@ function newRequest()
 		else
 		{
 			//handle error.
-			document.getElementById("errorMessage").innerHTML = xmlhttp.responseText;
+			if(xmlhttp.status == 401 || xmlhttp.status == 404)
+			{
+				document.getElementById("errorMessage").innerHTML = xmlhttp.responseText;
+			}
 		}
 	}
 	xmlhttp.open("GET", url, true);
